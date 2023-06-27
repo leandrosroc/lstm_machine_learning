@@ -34,7 +34,7 @@ plt.show()
 #verificar a quantidade de linhas
 qtd_linhas = len(df_acao_fec)
 
-qtd_linhas_treino = round(.70 * qtd_linhas)
+qtd_linhas_treino = round(.75 * qtd_linhas)
 
 qtd_linhas_teste = qtd_linhas - qtd_linhas_treino
 
@@ -90,7 +90,7 @@ modelo.compile(optimizer='adam', loss='mse')
 modelo.summary()
 
 #treinamento do modelo
-validation = modelo.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=2, batch_size=15, verbose=2)
+validation = modelo.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=100, batch_size=15, verbose=2)
 
 plt.plot(validation.history['loss'], label='Training loss')
 plt.plot(validation.history['val_loss'], label='Validation loss')
@@ -127,12 +127,12 @@ while(i<=n_future):
     if(len(list_output_steps) > steps):
         
         input_steps = np.array(list_output_steps[1:])
-        print("Dia: {}. Valores de entrada -> {}".format(i,input_steps))
+        #print("Dia: {}. Valores de entrada -> {}".format(i,input_steps))
         input_steps = input_steps.reshape(1,-1)
         input_steps = input_steps.reshape((1, steps, 1))
         #print(input_steps)
         pred = modelo.predict(input_steps, verbose=0)
-        print("Dia: {}. Valor previsto -> {}".format(i,pred))
+        #print("Dia: {}. Valor previsto -> {}".format(i,pred))
         list_output_steps.extend(pred[0].tolist())
         list_output_steps=list_output_steps[1:]
         #print(list_output_steps)
@@ -141,9 +141,9 @@ while(i<=n_future):
     else:       
         input_steps = input_steps.reshape((1, steps,1))
         pred = modelo.predict(input_steps, verbose=0)
-        print(pred[0])
+        #print(pred[0])
         list_output_steps.extend(pred[0].tolist())
-        print(len(list_output_steps))
+        #print(len(list_output_steps))
         pred_output.extend(pred.tolist())
         i=i+1
 
@@ -173,6 +173,10 @@ df_acao_fec = df_acao[['data_dia', 'preco_fechamento']]
 df_acao_fec=df_acao_fec.set_index(pd.DatetimeIndex(df_acao_fec['data_dia'].values))
 df_acao_fec.drop('data_dia',axis=1,inplace=True)
 
+print("############################################################")
+print(df_acao_fec['preco_fechamento'])
+print("############################################################")
+print(df_forecast['preco_fechamento'])
 #plotar o grafico
 plt.figure(figsize=(16,8))
 plt.plot(df_acao_fec['preco_fechamento'])
