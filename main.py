@@ -83,14 +83,14 @@ modelo = Sequential()
 modelo.add(LSTM(35, return_sequences=True, input_shape=(steps, 1)))
 modelo.add(LSTM(35, return_sequences=True))
 modelo.add(LSTM(35))
-modelo.add(Dropout(0.2))
+modelo.add(Dropout(0.1))
 modelo.add(Dense(1))
 
 modelo.compile(optimizer='adam', loss='mse')
 modelo.summary()
 
 #treinamento do modelo
-validation = modelo.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=100, batch_size=15, verbose=2)
+validation = modelo.fit(X_train, Y_train, validation_data=(X_test, Y_test), epochs=2, batch_size=15, verbose=2)
 
 plt.plot(validation.history['loss'], label='Training loss')
 plt.plot(validation.history['val_loss'], label='Validation loss')
@@ -122,7 +122,7 @@ pred_output=[]
 i=1
 n_future=10
 
-while(i<n_future):
+while(i<=n_future):
     
     if(len(list_output_steps) > steps):
         
@@ -168,7 +168,7 @@ df_forecast['data_dia'] = pd.to_datetime(df_forecast['data_dia'])
 df_forecast=df_forecast.set_index(pd.DatetimeIndex(df_forecast['data_dia'].values))
 df_forecast.drop('data_dia',axis=1,inplace=True)
 
-df_acao= df[ (df['indicador'] == 'ind') & (df['data_dia'] > '2021-05-01')]
+df_acao= df[ (df['indicador'] == 'ind') & (df['data_dia'] > '2023-06-01')]
 df_acao_fec = df_acao[['data_dia', 'preco_fechamento']]
 df_acao_fec=df_acao_fec.set_index(pd.DatetimeIndex(df_acao_fec['data_dia'].values))
 df_acao_fec.drop('data_dia',axis=1,inplace=True)
